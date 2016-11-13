@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Marble Tuna{% endblock title %}
+{% block page-header-text %}Oracle Services{% endblock %}
+{% block sub-header %}{% endblock %}
+{% block main %}
+<div class="table-responsive">
+  <table class="table table-bordered table-striped table-hover table-condensed">
+  <thead>
+    <tr>
+    {% for header in oracle_services.headers %}
+      <th>{{ header }}</th>
+    {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in oracle_services.rows %}
+    <tr{% if row.offline %} class="text-danger"{% endif %}>
+      {% for field in row.fields %}
+        <td>{{ field|safe }}</td>
+      {% endfor %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endblock %}
