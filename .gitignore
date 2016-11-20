@@ -1,3 +1,4 @@
 .DS_Store
 mysite/mysite/static
 ldap_t.py
+*.pyc
