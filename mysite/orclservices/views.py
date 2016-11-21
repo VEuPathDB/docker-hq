@@ -9,11 +9,11 @@ ldappool = LdapPool()
 
 def index(request, host_filter = None):
   template = loader.get_template('orclservices/index.html')
-  #print("REQUESTSTRING %s" % request.ldap_conn)
   os = OracleServices(ldappool, host_filter)
   context = {
     'settings' : settings,
-    'oracle_services' : os.data_for_display(),
+    'host_filter': host_filter,
+    'oracle_services': sorted(os.combined_services.items()),
   }
   return HttpResponse(template.render(context, request))
 

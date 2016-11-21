@@ -64,6 +64,9 @@ class OracleServices:
         self.combined_services[svc_name_host]["cn_list"] = []
 
       self.combined_services[svc_name_host]["cn_list"].append(cn)
+      self.combined_services[svc_name_host]["cn_str"] = (
+        ', '.join(sorted(self.combined_services[svc_name_host]["cn_list"]))
+      )
       self.combined_services[svc_name_host]["tns_host"] = tns_host
       self.combined_services[svc_name_host]["service_name"] = service_name
 
@@ -74,7 +77,6 @@ class OracleServices:
       for key in transfer_keys:
         if key not in self.combined_services[svc_name_host]:
           self.combined_services[svc_name_host][key] = ""
-
 
 
   def processOracleLsnrctlServices(self):
@@ -114,11 +116,22 @@ class OracleServices:
       self.combined_services[svcNameHost]["cn_list"] = []
       self.combined_services[svcNameHost]["tns_host"] = orclNetServer
       self.combined_services[svcNameHost]["service_name"] = orclNetServiceName
+      self.combined_services[svcNameHost]["redmine_link"] = self.make_redmine_link(orclNetServiceName)
       self.combined_services[svcNameHost]["instance"] = orclNetInstanceName
       self.combined_services[svcNameHost]["created_unix_time"] = created_unix_time
       self.combined_services[svcNameHost]["created_date_time"] = created_date_time
       self.combined_services[svcNameHost]["verified_date_time"] = verified_date_time
       self.combined_services[svcNameHost]["verified_unix_time"] = verified_unix_time # for sorting
+
+
+  def make_redmine_link(self, orclNetServiceName):
+    redmine_re = re.compile("^rm([0-9]+).*", re.IGNORECASE)
+    m = re.match(redmine_re, orclNetServiceName)
+    if m is not None:
+      redmine_link = "https://redmine.apidb.org/issues/{0}".format(m.group(1))
+      return "<a href='{0}'>{1}&nbsp;&reg;<a>".format(redmine_link, orclNetServiceName)
+    return None
+
 
 
   """

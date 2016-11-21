@@ -3,22 +3,38 @@
 {% block page-header-text %}Oracle Services{% endblock %}
 {% block sub-header %}{% endblock %}
 {% block main %}
-<a href="{% url 'orclservices:index' %}">index</a>
+{% url 'orclservices:index' as index %}
 <div class="table-responsive">
 <table class="table table-bordered table-striped table-hover table-condensed">
   <thead>
     <tr>
-    {% for header in oracle_services.headers %}
-      <th>{{ header }}</th>
-    {% endfor %}
+      <th>service_name</th>
+      <th>net service name</th>
+      {% if host_filter is not None %}
+      <th>host (<a href="{{ index }}">+</a>)</th>
+      {% else %}
+      <th>host</th>
+      {% endif %}
+      <th>instance</th>
+      <th>verified</th>
+      <th>service registered</th>
     </tr>
   </thead>
   <tbody>
-    {% for row in oracle_services.rows %}
-    <tr{% if row.offline %} class="text-danger"{% endif %}>
-      {% for field in row.fields %}
-        <td>{{ field|safe }}</td>
-      {% endfor %}
+    {% for key, row in oracle_services %}
+    <tr{% if row.instance == '' %} class="text-danger"{% endif %}>
+    <td>
+      {% if row.redmine_link is None %}
+        {{ row.service_name }}
+      {% else %}
+        {{ row.redmine_link|safe }}
+      {% endif %}
+    </td>
+    <td>{{ row.cn_str }}</td>
+    <td><a href="{{ index }}{{ row.tns_host }}">{{ row.tns_host }}</a></td>
+    <td>{{ row.instance }}</td>
+    <td>{{ row.verified_date_time }}</td>
+    <td>{{ row.created_date_time }}</td>
     </tr>
     {% endfor %}
   </tbody>
