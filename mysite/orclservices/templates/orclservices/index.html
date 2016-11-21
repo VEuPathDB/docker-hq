@@ -3,8 +3,9 @@
 {% block page-header-text %}Oracle Services{% endblock %}
 {% block sub-header %}{% endblock %}
 {% block main %}
+<a href="{% url 'orclservices:index' %}">index</a>
 <div class="table-responsive">
-  <table class="table table-bordered table-striped table-hover table-condensed">
+<table class="table table-bordered table-striped table-hover table-condensed">
   <thead>
     <tr>
     {% for header in oracle_services.headers %}

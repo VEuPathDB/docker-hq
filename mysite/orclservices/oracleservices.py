@@ -7,47 +7,20 @@ from datetime import datetime
 
 class OracleServices:
 
-  def __init__(self):
-    self.conn = self.connect_and_bind()
+  def __init__(self, ldappool = None, host_filter = None):
+    self.host_filter = host_filter
+    with ldappool.connection_manager.connection() as conn:
+      self.conn = conn
     self.combined_services = {}
     self.combine_service_data_from_ldap()
-
-
-  def connect_and_bind(self):
-    try:
-      print("DEBUG: setup start")
-      conn = ldap.initialize(settings.LDAP_HOST)
-      print("DEBUG: initialize complete")
-      conn.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, ldap.OPT_X_TLS_DEMAND)
-      conn.set_option(ldap.OPT_NETWORK_TIMEOUT, 10)
-      conn.set_option(ldap.OPT_PROTOCOL_VERSION, ldap.VERSION3)
-      print("DEBUG: start_tls")
-      conn.start_tls_s()
-      print("DEBUG: start_tls complete")
-      print("DEBUG: bind start")
-      conn.simple_bind(settings.LDAP_USERNAME, settings.LDAP_PASSWORD)
-      print("DEBUG: bind complete")
-    except ldap.LDAPError as e:
-      print(e)
-      #raise Exception("Unable to get LDAP connection.")
-    return conn
 
 
   def search(self, base_dn, scope = ldap.SCOPE_SUBTREE,
     attrlist = None, filterstr = None):
     try:
-      ldap_result_id = self.conn.search(base_dn, scope, filterstr, attrlist)
-      result_set = []
-      while 1:
-        result_type, result_data = self.conn.result(ldap_result_id, 0)
-        if (result_data == []):
-          break
-        else:
-          if result_type == ldap.RES_SEARCH_ENTRY:
-            result_set.append(result_data)
-      return result_set
+      return self.conn.search_s(base_dn, scope, filterstr, attrlist)
     except ldap.LDAPError as e:
-      print(e)
+      print("Error: {0}".format(e))
 
   def combine_service_data_from_ldap(self):
     self.processOracleLsnrctlServices()
@@ -56,7 +29,10 @@ class OracleServices:
 
   def procesOracleContext(self):
     dn = "cn=oraclecontext,ou=applications,dc=apidb,dc=org"
-    filterstr = "(objectclass=orclNetService)"
+    if self.host_filter is None:
+      filterstr = "(objectclass=orclNetService)"
+    else:
+      filterstr = "(&(objectclass=orclNetService)(orclNetDescString=*HOST={0}*))".format(self.host_filter)
     scope = ldap.SCOPE_SUBTREE
     attrlist = ["cn", "orclnetdescstring", "description"]
     result_set = self.search(dn, ldap.SCOPE_ONELEVEL, attrlist, filterstr)
@@ -66,7 +42,7 @@ class OracleServices:
     if result_set is None:
       return
     for result in result_set:
-      tns_entries = cidict(result[0][1])
+      tns_entries = cidict(result[1])
       cn = tns_entries["cn"][0].decode("utf-8").strip()
       # split/join to remove all whitespace in orclNetDescString
       orclNetDescString = "".join(tns_entries["orclnetdescstring"][0].decode("utf-8").split())
@@ -81,7 +57,7 @@ class OracleServices:
       if m is not None:
         tns_host = m.group(1)
 
-      svc_name_host = ("%s %s" % (service_name, tns_host)).lower()
+      svc_name_host = ("{0} {1}".format(service_name, tns_host)).lower()
 
       if svc_name_host not in self.combined_services:
         self.combined_services[svc_name_host] = {}
@@ -109,16 +85,19 @@ class OracleServices:
       "orclNetInstanceName", "orclVersion", "verifiedTimestamp",
       "createtimestamp"
     ]
-    filterstr = "(objectclass=orclNetDescription)"
+    if self.host_filter is None:
+      filterstr = "(objectclass=orclNetDescription)"
+    else:
+      filterstr = "(&(objectclass=orclNetDescription)(orclNetServer={0}))".format(self.host_filter)
     result_set = self.search(dn, ldap.SCOPE_ONELEVEL, attrlist, filterstr)
     if result_set is None:
       return
     for result in result_set:
-      srvc_entries = cidict(result[0][1])
+      srvc_entries = cidict(result[1])
       orclNetServiceName = srvc_entries["orclnetservicename"][0].decode("utf-8").strip()
       orclNetServer = srvc_entries["orclnetserver"][0].decode("utf-8").strip()
       orclNetInstanceName = srvc_entries["orclnetinstancename"][0].decode("utf-8").strip()
-      svcNameHost = ("%s %s" % (orclNetServiceName, orclNetServer)).lower()
+      svcNameHost = ("{0} {1}".format(orclNetServiceName, orclNetServer)).lower()
       verifiedTimestamp = srvc_entries["verifiedtimestamp"][0].decode("utf-8")
       verified_date_obj = datetime.strptime(verifiedTimestamp, "%Y%m%d%H%M%SZ")
       verified_unix_time = (verified_date_obj - datetime(1970, 1, 1)).total_seconds()
@@ -128,8 +107,8 @@ class OracleServices:
       created_date_time = datetime.strftime(created_date_obj, "%-d %b %Y")
       created_unix_time = (created_date_obj - datetime(1970, 1, 1)).total_seconds()
 
-      #print("%s ago" % verified_date_time)
-      #print("%s" % svcNameHost)
+      #print("{0} ago".format(verified_date_time))
+      #print("{0}".format(svcNameHost))
 
       self.combined_services[svcNameHost] = {}
       self.combined_services[svcNameHost]["cn_list"] = []
@@ -173,7 +152,7 @@ class OracleServices:
       if (count != 0):
         break
 
-    display_str = ("1 %s" % name) if (count == 1) else ("%i %ss" % (count, name))
+    display_str = ("1 {0}".format(name)) if (count == 1) else ("{0} {1}s".format(count, name))
 
     if idx + 1 < len(chunks):
       # now getting the second time chunk
@@ -182,8 +161,8 @@ class OracleServices:
       # add second item if it"s greater than 0
       count_2 = math.floor((seconds_since - (seconds * count)) / seconds_2)
       if (count_2 != 0):
-        display_str_2 = ("1 %s" % name_2) if (count_2 == 1) else ("%i %ss" % (count_2, name_2))
-        display_str = "%s %s ago" % (display_str, display_str_2)
+        display_str_2 = ("1 {0}".format(name_2)) if (count_2 == 1) else ("{0} {1}s".format(count_2, name_2))
+        display_str = "{0} {1} ago".format(display_str, display_str_2)
 
     return display_str
 
@@ -213,8 +192,8 @@ class OracleServices:
 
       m = re.match(redmine_re, entry['instance'] )
       if m is not None:
-        redmine_link = "https://redmine.apidb.org/issues/%s" % m.group(1)
-        entry['service_name'] = "<a href='%s'>%s&nbsp;&reg;<a>" % (redmine_link, entry['service_name'])
+        redmine_link = "https://redmine.apidb.org/issues/{0}".format(m.group(1))
+        entry['service_name'] = "<a href='{0}'>{1}&nbsp;&reg;<a>".format(redmine_link, entry['service_name'])
 
       for title, srvc_key in header_key:
         if isinstance(entry[srvc_key], list):
@@ -232,8 +211,3 @@ class OracleServices:
       "rows": table_rows,
     }
     return table_data
-
-
-  def __del__(self):
-    print("closing ldap connection")
-    self.conn.unbind()
