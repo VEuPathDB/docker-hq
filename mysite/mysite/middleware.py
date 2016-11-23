@@ -25,7 +25,6 @@ class LoginRequiredMiddleware(object):
       self.exempt_urls += [compile(expr) for expr in settings.LOGIN_EXEMPT_URLS]
 
   def __call__(self, request):
-    print("LoginRequiredMiddleware __call__ with request %s" % request)
     assert hasattr(request, 'user'), "The Login Required middleware\
  requires authentication middleware to be installed. Edit your\
  MIDDLEWARE setting to insert\
@@ -35,7 +34,6 @@ class LoginRequiredMiddleware(object):
     if not request.user.is_authenticated():
       path = request.path_info.lstrip('/')
       if not any(m.match(path) for m in self.exempt_urls):
-        print("REDIRECT with %s" % path)
         return HttpResponseRedirect('{0}?next=/{1}'.format(settings.LOGIN_URL, path))
     response = self.get_response(request)
     return response
