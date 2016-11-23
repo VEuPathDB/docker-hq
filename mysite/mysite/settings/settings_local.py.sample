@@ -1,0 +1,19 @@
+
+# Set a string for cryptographic signing. This must be unique for
+# your site and kept secret.
+#
+# Can be generated with the one-liner:
+#   python -c 'from django.utils.crypto import get_random_string;\
+#     chars = "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)";\
+#     print(get_random_string(50, chars));'
+#
+# WARNING: keep the secret key used in production secret!
+# https://docs.djangoproject.com/en/1.10/ref/settings/#secret-key
+#
+SECRET_KEY =
+
+ALLOWED_HOSTS = []
+
+LDAP_HOST = 'ldap://ds1.apidb.org'
+LDAP_USERNAME = ''
+LDAP_PASSWORD = ''

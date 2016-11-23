@@ -30,9 +30,6 @@ STATIC_ROOT = os.path.join(DJANGO_ROOT, "static")
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'n_7k0nd_&1)gp_oxh8*hvw0c*q8wa$#guqw0y8ocbwjd_e=*y@'
-
 ALLOWED_HOSTS = []
 
 
@@ -143,6 +140,4 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-LDAP_HOST = 'ldap://ds1.apidb.org'
-LDAP_USERNAME = ''
-LDAP_PASSWORD = ''
+from .settings_local import *

@@ -1,5 +1,6 @@
 .DS_Store
 db.sqlite3
+settings_local.py
 mysite/mysite/static
 ldap_t.py
 *.pyc
