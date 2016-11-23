@@ -1,9 +1,9 @@
 {% extends "base.html" %}
-{% block title %}Marble Tuna{% endblock title %}
+{% block title %}{{ block.super }} - Oracle Services{% endblock title %}
 {% block page-header-text %}Oracle Services{% endblock %}
 {% block sub-header %}{% endblock %}
 {% block main %}
-{% url 'orclservices:index' as index %}
+{% url 'oracleservices:index' as index %}
 <div class="table-responsive">
 <table class="table table-bordered table-striped table-hover table-condensed">
   <thead>

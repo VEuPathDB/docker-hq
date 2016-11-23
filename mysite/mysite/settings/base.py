@@ -49,7 +49,7 @@ PREREQ_APPS = [
 
 PROJECT_APPS = [
     'polls.apps.PollsConfig',
-    'orclservices.apps.OrclservicesConfig',
+    'oracleservices.apps.OracleServicesConfig',
 ]
 
 INSTALLED_APPS = PREREQ_APPS + PROJECT_APPS
@@ -62,6 +62,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'mysite.middleware.LoginRequiredMiddleware',
 ]
 
 ROOT_URLCONF = 'mysite.urls'
@@ -95,6 +96,14 @@ DATABASES = {
     }
 }
 
+AUTHENTICATION_BACKENDS = [
+  'django.contrib.auth.backends.ModelBackend',
+#  'django_auth_ldap.backend.LDAPBackend',
+]
+
+LOGIN_URL = '/login'
+LOGIN_REDIRECT_URL = '/'
+LOGIN_EXEMPT_URLS = ['/login']
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators

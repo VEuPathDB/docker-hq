@@ -2,13 +2,13 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
 from django.conf import settings
-from orclservices.oracleservices import OracleServices
-from orclservices.ldappool import LdapPool
+from oracleservices.oracleservices import OracleServices
+from oracleservices.ldappool import LdapPool
 
 ldappool = LdapPool()
 
 def index(request, host_filter = None):
-  template = loader.get_template('orclservices/index.html')
+  template = loader.get_template('oracleservices/index.html')
   os = OracleServices(ldappool, host_filter)
   context = {
     'settings' : settings,
@@ -18,7 +18,7 @@ def index(request, host_filter = None):
   return HttpResponse(template.render(context, request))
 
 def dashboard(request):
-  template = loader.get_template('orclservices/dashboard.html')
+  template = loader.get_template('oracleservices/dashboard.html')
   context = {}
   return HttpResponse(template.render(context, request))
 

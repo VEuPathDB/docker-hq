@@ -3,5 +3,5 @@ from __future__ import unicode_literals
 from django.apps import AppConfig
 
 
-class OrclservicesConfig(AppConfig):
-  name = 'orclservices'
+class OracleServicesConfig(AppConfig):
+  name = 'oracleservices'

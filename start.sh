@@ -4,6 +4,10 @@ project=$1
 
 cd "$project"
 
+if ! grep -q '128.192.75.30' /etc/hosts; then
+  echo '128.192.75.30 ds1.apidb.org' >> /etc/hosts
+fi
+
 #export DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE:-mysite.settings.production} 
 
 # Collect static files

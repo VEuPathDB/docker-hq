@@ -15,13 +15,18 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.conf.urls import include
+from django.conf import settings
 from django.contrib import admin
+from django.contrib import auth
+from django.contrib.auth import views
 
 from . import views
 
 urlpatterns = [
-  url(r'^$',      views.index, name='index'),
+  url(r'^$', views.index, name='index'),
   url(r'^polls/', include('polls.urls')),
-  url(r'^orclservices/', include('orclservices.urls')),
+  url(r'^oracleservices/', include('oracleservices.urls')),
   url(r'^admin/', admin.site.urls),
+  url(settings.LOGIN_URL.lstrip('/'), auth.views.login, {'template_name': 'login.html'},  name='login'),
+  url(r'^logout/$', auth.views.logout, {'template_name': 'logged_out.html', 'next_page': '/'},  name='logout'),
 ]

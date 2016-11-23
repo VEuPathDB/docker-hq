@@ -1,4 +1,4 @@
-
+superuser: admin/adminadmin
 
       docker build -t ebrc/djangodemo .
 
