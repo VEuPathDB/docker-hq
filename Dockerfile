@@ -1,7 +1,7 @@
 
 FROM python:3
 
-ENV DJANGO_SETTINGS_MODULE=mysite.settings.production
+ENV DJANGO_SETTINGS_MODULE=hq.settings.production
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
@@ -17,10 +17,10 @@ RUN /usr/sbin/update-ca-certificates
 
 COPY . /usr/src/app
 
-RUN python mysite/manage.py migrate
+RUN python hq/manage.py migrate
 
 COPY start.sh /start.sh
 
 EXPOSE 8000
 
-CMD ["/start.sh", "mysite"]
+CMD ["/start.sh", "hq"]
