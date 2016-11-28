@@ -4,4 +4,5 @@ settings_local.py
 hq/hq/static
 ldap_t.py
 *.pyc
+*.bak
 scratch
