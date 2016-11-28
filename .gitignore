@@ -1,7 +1,7 @@
 .DS_Store
 db.sqlite3
 settings_local.py
-mysite/mysite/static
+hq/hq/static
 ldap_t.py
 *.pyc
 scratch
