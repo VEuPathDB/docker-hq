@@ -1,4 +1,4 @@
-"""mysite URL Configuration
+"""hq URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/1.10/topics/http/urls/
@@ -25,6 +25,7 @@ from . import views
 urlpatterns = [
   url(r'^$', views.index, name='index'),
   url(r'^polls/', include('polls.urls')),
+  url(r'^domains/', include('domains.urls')),
   url(r'^oracleservices/', include('oracleservices.urls')),
   url(r'^admin/', admin.site.urls),
   url(settings.LOGIN_URL.lstrip('/'), auth.views.login, {'template_name': 'login.html'},  name='login'),
