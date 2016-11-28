@@ -8,7 +8,7 @@ if ! grep -q '128.192.75.30' /etc/hosts; then
   echo '128.192.75.30 ds1.apidb.org' >> /etc/hosts
 fi
 
-#export DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE:-mysite.settings.production} 
+#export DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE:-hq.settings.production}
 
 # Collect static files
 echo "Collect static files"
