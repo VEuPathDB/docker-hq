@@ -18,9 +18,9 @@ python manage.py collectstatic --noinput
 echo "Apply database migrations"
 python manage.py migrate
 
-exec python manage.py runserver 0.0.0.0:8000
+#exec python manage.py runserver 0.0.0.0:8000
 
-#echo "Starting Gunicorn for '$project'".
-#exec gunicorn "${project}.wsgi:application" \
-#  --bind 0.0.0.0:8000 \
-#  --workers 3
+echo "Starting Gunicorn for '$project'".
+exec gunicorn "${project}.wsgi:application" \
+  --bind 0.0.0.0:8000 \
+  --workers 3
