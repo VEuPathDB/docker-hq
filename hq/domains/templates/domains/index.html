@@ -12,6 +12,7 @@
       <th>domain</th>
       <th>registrar</th>
       <th>registrant</th>
+      <th>expires</th>
       <th>notes</th>
     </tr>
   </thead>
@@ -22,6 +23,7 @@
     <td>{{ d.domain_name }}</td>
     <td>{{ d.registrar }}</td>
     <td>{{ d.registrant }}</td>
+    <td class="text-nowrap">{{ d.whois.expiration_date|date:'Y-m-d' }}</td>
     <td>{{ d.notes }}</td>
     </tr>
     {% endfor %}
