@@ -20,7 +20,7 @@
     {% for d in domain_list %}
     <tr>
     <td>{{ forloop.counter }}</td>
-    <td>{{ d.domain_name }}</td>
+    <td><a href="{% url 'domains:whois' domain_name=d.domain_name %}">{{ d.domain_name }}</a></td>
     <td>{{ d.registrar }}</td>
     <td>{{ d.registrant }}</td>
     <td class="text-nowrap">{{ d.whois.expiration_date|date:'Y-m-d' }}</td>

@@ -1,20 +1,20 @@
 {% extends "base.html" %}
-{% block title %}{{ block.super }} - Domains{% endblock title %}
+{% block title %}{{ block.super }} - Whois{% endblock title %}
 {% block page-header-text %}Whois{% endblock %}
 {% block sub-header %}{% endblock %}
 {% block main %}
 
   {% for rec in whois_records %}
     <h3>{{ rec.domain.domain_name }}</h3>
-      <i>record cached {{ rec.internal_cache_date }}
-        <a href="{% url 'domains:update_whois' domain_name=rec.domain.domain_name %}?from={{ request.path|urlencode }}">update</a></i><br />
-      <b>registrar:</b> {{ rec.registrar }}<br />
+      <b>expiration_date:</b> {{ rec.expiration_date }}<br />
       <b>updated_date:</b> {{ rec.updated_date }}<br />
       <b>creation_date:</b> {{ rec.creation_date }}<br />
+      <b>registrar:</b> {{ rec.registrar }}<br />
       <b>contacts:</b> {{ rec.contacts }}<br />
       <b>status:</b> {{ rec.status }}<br />
       <b>nameservers:</b> {{ rec.nameservers }}<br />
-      <b>expiration_date:</b> {{ rec.expiration_date }}<br />
+      <i>record cached {{ rec.internal_cache_date }}
+        <a href="{% url 'domains:update_whois' domain_name=rec.domain.domain_name %}?from={{ request.path|urlencode }}">update</a></i><br />
   {% endfor %}
   <p />
 {% endblock %}
