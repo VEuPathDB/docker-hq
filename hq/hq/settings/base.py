@@ -148,5 +148,4 @@ AUTH_LDAP_USER_DN_TEMPLATE = "uid=%(user)s,ou=People,dc=example,dc=org"
 AUTH_LDAP_START_TLS = True
 AUTH_LDAP_USER_ATTR_MAP = {"first_name": "givenName", "last_name": "sn", "email": "mail"}
 
-from .queue import *
 from .settings_local import *
