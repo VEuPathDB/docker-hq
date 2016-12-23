@@ -17,3 +17,15 @@ ALLOWED_HOSTS = []
 LDAP_HOST = 'ldap://ds1.apidb.org'
 LDAP_USERNAME = ''
 LDAP_PASSWORD = ''
+
+AUTH_LDAP_SERVER_URI = 'ldap://ds1.example.org'
+AUTH_LDAP_USER_DN_TEMPLATE = "uid=%(user)s,ou=People,dc=example,dc=org"
+AUTH_LDAP_START_TLS = True
+AUTH_LDAP_USER_ATTR_MAP = {"first_name": "givenName", "last_name": "sn", "email": "mail"}
+
+DATABASES = {
+  'default': {
+    'ENGINE': 'django.db.backends.sqlite3',
+    'NAME': '/usr/src/app/data/db.sqlite3',
+  },
+}

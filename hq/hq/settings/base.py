@@ -90,17 +90,16 @@ WSGI_APPLICATION = 'hq.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
-
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(DJANGO_ROOT, 'db.sqlite3'),
-    }
+  'default': {
+    'ENGINE': 'django.db.backends.sqlite3',
+    'NAME': '/usr/src/app/data/db.sqlite3',
+  }
 }
 
 AUTHENTICATION_BACKENDS = [
   'django.contrib.auth.backends.ModelBackend',
-#  'django_auth_ldap.backend.LDAPBackend',
+  'django_auth_ldap.backend.LDAPBackend',
 ]
 
 LOGIN_URL = '/login'
@@ -139,10 +138,15 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
 
+AUTH_LDAP_SERVER_URI = 'ldap://ds1.example.org'
+AUTH_LDAP_USER_DN_TEMPLATE = "uid=%(user)s,ou=People,dc=example,dc=org"
+AUTH_LDAP_START_TLS = True
+AUTH_LDAP_USER_ATTR_MAP = {"first_name": "givenName", "last_name": "sn", "email": "mail"}
+
+from .queue import *
 from .settings_local import *
