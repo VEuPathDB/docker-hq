@@ -29,7 +29,7 @@ class WhoisCachier:
           datadict[k] = v
         else:
           datadict[k] = v
-      datadict['internal_cache_date'] = datetime.now().replace(tzinfo=pytz.utc)
+      datadict['internal_cache_date'] = datetime.now().replace(tzinfo=utc)
       whois_record, created = Whois.objects.update_or_create(
         domain=domain,
         defaults = datadict
