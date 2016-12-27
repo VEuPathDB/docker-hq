@@ -1,18 +1,25 @@
-FROM python:3
+FROM python:3-alpine
 
 ENV DJANGO_SETTINGS_MODULE=hq.settings.production
+
+RUN  apk --no-cache add  openldap-dev
+
+RUN apk --no-cache add curl && \
+  curl -sSL https://eupathdb.org/common/apidb-ca-rsa.crt \
+  -o /usr/local/share/ca-certificates/apidb-ca-rsa.crt && \
+  mkdir -p /etc/openldap/ && \
+  echo 'TLS_CACERTDIR /etc/ssl/certs' >> /etc/openldap/ldap.conf && \
+  apk del curl && \
+  /usr/sbin/update-ca-certificates
 
 WORKDIR /usr/src/app
 RUN mkdir -p /usr/src/app
 
-RUN apt-get update && apt-get install -y libldap2-dev libsasl2-dev libssl-dev
-
 COPY hq /usr/src/app/hq
-RUN pip install --no-cache-dir -r /usr/src/app/hq/requirements.txt
 
-RUN curl -sSL https://eupathdb.org/common/apidb-ca-rsa.crt \
-  -o /usr/local/share/ca-certificates/apidb-ca-rsa.crt
-RUN /usr/sbin/update-ca-certificates
+RUN apk --no-cache add git gcc musl-dev && \
+  pip install --no-cache-dir -r /usr/src/app/hq/requirements.txt && \
+  apk del git gcc musl-dev
 
 COPY start.sh /start.sh
 
