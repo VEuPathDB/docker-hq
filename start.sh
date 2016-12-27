@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 project=$1
 
@@ -19,7 +19,7 @@ echo "Apply database migrations"
 python manage.py migrate
 
 
-if [[ $DJANGO_SETTINGS_MODULE == "hq.settings.production" ]]; then
+if [ $DJANGO_SETTINGS_MODULE == "hq.settings.production" ]; then
   echo "Starting Gunicorn for '$project'".
   exec gunicorn "${project}.wsgi:application" \
     --bind 0.0.0.0:8000 \
