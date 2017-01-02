@@ -1,0 +1,53 @@
+version: '2'
+services:
+  hq:
+    container_name: hq
+    build: .
+    hostname: web
+    command: ['./start.sh', 'hq']
+    environment:
+      - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}
+    volumes:
+      - .:/usr/src/app
+      - ./settings_local.py:/usr/src/app/hq/hq/settings/settings_local.py
+    ports:
+      - "8111:8000"
+    links:
+      - redis
+
+  redis:
+    container_name: redis
+    image: redis:2.8.19
+    hostname: redis
+
+  rqworker:
+    build: .
+    container_name: rqworker
+    command: ./start_rqworker.sh
+    volumes:
+      - .:/usr/src/app
+      - ./settings_local.py:/usr/src/app/hq/hq/settings/settings_local.py
+    links:
+      - redis
+
+  rqscheduler:
+    build: .
+    container_name: rqscheduler
+    command: ./start_rqscheduler.sh
+    volumes:
+      - .:/usr/src/app
+      - ./settings_local.py:/usr/src/app/hq/hq/settings/settings_local.py
+    links:
+      - redis
+
+  rqdashboard:
+    build: .
+    container_name: rqdashboard
+    command: ./start_rqdashboard.sh
+    ports:
+      - "9181:9181"
+    volumes:
+      - .:/usr/src/app
+      - ./settings_local.py:/usr/src/app/hq/hq/settings/settings_local.py
+    links:
+      - redis

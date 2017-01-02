@@ -44,6 +44,8 @@ PREREQ_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_rq',
+#    'scheduler',
     'import_export',
 ]
 
@@ -147,5 +149,13 @@ AUTH_LDAP_SERVER_URI = 'ldap://ds1.example.org'
 AUTH_LDAP_USER_DN_TEMPLATE = "uid=%(user)s,ou=People,dc=example,dc=org"
 AUTH_LDAP_START_TLS = True
 AUTH_LDAP_USER_ATTR_MAP = {"first_name": "givenName", "last_name": "sn", "email": "mail"}
+
+RQ_QUEUES = {
+  'default': {
+    'HOST': 'redis',
+    'PORT': 6379,
+    'DB': 0
+  }
+}
 
 from .settings_local import *

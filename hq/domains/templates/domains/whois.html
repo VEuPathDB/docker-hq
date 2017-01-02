@@ -13,7 +13,7 @@
       <b>contacts:</b> {{ rec.contacts }}<br />
       <b>status:</b> {{ rec.status }}<br />
       <b>nameservers:</b> {{ rec.nameservers }}<br />
-      <i>record cached {{ rec.internal_cache_date }}
+      <i>record cached {{ rec.internal_cache_date|date:"M. j, Y, g:i:s a T" }}
         <a href="{% url 'domains:update_whois' domain_name=rec.domain.domain_name %}?from={{ request.path|urlencode }}">update</a></i><br />
   {% endfor %}
   <p />

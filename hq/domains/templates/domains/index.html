@@ -17,7 +17,7 @@
     </tr>
   </thead>
   <tbody>
-    {% for d in domain_list %}
+    {% for d in domain_queryset %}
     <tr>
     <td>{{ forloop.counter }}</td>
     <td><a href="{% url 'domains:whois' domain_name=d.domain_name %}">{{ d.domain_name }}</a></td>

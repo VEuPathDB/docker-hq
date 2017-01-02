@@ -11,9 +11,9 @@ from domains.whois import WhoisCachier
 
 def index(request, order_by = None):
   template = loader.get_template('domains/index.html')
-  domain_list = Domain.objects.order_by('whois__expiration_date')
+  domain_queryset = Domain.objects.order_by('whois__expiration_date')
   context = {
-    'domain_list': domain_list,
+    'domain_queryset': domain_queryset,
   }
   return HttpResponse(template.render(context, request))
 
@@ -33,11 +33,12 @@ def whois(request, domain_name = None):
 def update_whois(request, domain_name = None):
   # for each domain name in Domains.domain, do whois lookup,
   # insert or update related whois record
-  domain_list = (Domain.objects.filter(domain_name = domain_name)
+  domain_queryset = (Domain.objects.filter(domain_name = domain_name)
     if domain_name
     else Domain.objects.all()
   )
-  WhoisCachier.update_whois(domain_list)
+  for domain_model in domain_queryset:
+    WhoisCachier.update_whois_model(domain_model)
   return_to = request.GET.get('from', reverse('domains:whois'))
   return HttpResponseRedirect(return_to)
   #return HttpResponse("whoisupdated")

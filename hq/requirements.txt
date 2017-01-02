@@ -13,11 +13,11 @@ six==1.10.0
 requests==2.12.1
 
 # domains
-#python-whois==0.6.3
 pythonwhois==2.4.3
 pytz==2016.7
 
-
-celery==4.0.0
-redis==2.10.5
-#psycopg2==2.6.2
+django-rq==0.9.4
+rq-dashboard==0.3.7
+django-rq-dashboard==0.3.0
+rq-scheduler==0.7.0
+django-rq-scheduler==1.1.1
