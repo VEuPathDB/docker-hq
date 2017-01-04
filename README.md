@@ -1,6 +1,8 @@
-superuser: admin/adminadmin
+Warning: These notes are not complete, possibly wrong in places.
 
-      docker build -t ebrc/hq .
+## Production Admin
+
+See `hq` entry in Passpack
 
 ## Development Deployment
 
@@ -13,9 +15,9 @@ Edit `settings_local.py`.
 
 Run the docker image:
 
-    docker run -it --rm -p 8111:8000 -v /Users/mheiges/Docker/docker-hq/settings_local.py:/usr/src/app/hq/hq/settings/settings_local.py -v /Users/mheiges/Docker/docker-hq:/usr/src/app -e DJANGO_SETTINGS_MODULE=hq.settings.development --name hq mheiges/hq 
+    docker-compose up
 
-In this invocation the `docker-hq` on the host is mounted on the image at `/usr/src/app`. This will override the contents of `/usr/src/app` that is burned into the image and allow real-time editing of the Django code. When you `docker build`, the edited code will be copied into the new image. Production deployments do not override the contents of `app`, so run off the image code.
+In `docker-compose.yml` the `docker-hq` directory on the host is mounted on the image at `/usr/src/app`. This will override the contents of `/usr/src/app` that is burned into the image and allow real-time editing of the Django code. When you `docker build`, the edited code will be copied into the new image. Production deployments do not override the contents of `app`, and so run off the image code.
 
 The sqlite database is in the `django-hq/data` directory.
 
@@ -28,20 +30,19 @@ The sqlite database is in the `django-hq/data` directory.
 
 When hosting on Linux servers, the `settings_local.py` file is mounted from the host's `/var/lib/hq/settings_local.py`.
 
-
-/usr/bin/docker run -t -e DJANGO_SETTINGS_MODULE=hq.settings.production -p 8111:8000 -v /var/lib/hq/settings_local.py:/usr/src/app/hq/hq/settings/settings_local.py -v /var/lib/hq/data:/usr/src/app/data --name hq mheiges/hq
-
 By default the project runs under the hq.settings.production configuration. Here we set `-e DJANGO_SETTINGS_MODULE` value to use the production settings file.
-
-      $ docker run -it --rm -p 8000:8000 -v /Users/mheiges/Docker/docker-hq:/usr/src/app --name hq -e DJANGO_SETTINGS_MODULE=hq.settings.development ebrc/hq
 
 ### Deployment
 
 See Puppet `profiles::hq`
 
-### Restarting container
+### Restarting containers
 
-    systemctl restart docker-hq.service 
+As root
+
+    # cd /var/lib/hq
+    # docker-compose down
+    # docker-compose up -d
 
 ## Misc
 
