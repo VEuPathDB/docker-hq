@@ -10,8 +10,8 @@ now = datetime.utcnow()
 def update(domain):
   WhoisCachier.update_whois_model(domain)
 
-# Update whois models via RQ cron scheduled at random minute after
-# fixed hour.
+# Update whois models via RQ cron. To avoid abusing the whois server,
+# schedule at random minute after fixed hour.
 def add_schedules():
   scheduler = django_rq.get_scheduler('default')
 
