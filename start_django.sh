@@ -9,6 +9,7 @@ if ! grep -q '128.192.75.30' /etc/hosts; then
 fi
 
 export DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE:-hq.settings.production}
+echo "Using DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}"
 
 # Collect static files
 echo "Collect static files"

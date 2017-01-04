@@ -1,4 +1,4 @@
-FROM python:3-alpine
+FROM python:3.5.2-alpine
 
 ENV DJANGO_SETTINGS_MODULE=hq.settings.production
 
@@ -21,8 +21,8 @@ RUN apk --no-cache add git gcc musl-dev && \
   pip install --no-cache-dir -r /usr/src/app/hq/requirements.txt && \
   apk del git gcc musl-dev
 
-COPY start.sh /start.sh
+COPY start_django.sh start_rqworker.sh start_rqscheduler.sh start_rqdashboard.sh /
 
 EXPOSE 8000
 
-CMD ["/start.sh", "hq"]
+CMD ["/start_django.sh", "hq"]
