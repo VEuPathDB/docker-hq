@@ -1,3 +1,9 @@
+Mount
+    -v /Users/mheiges/Docker/docker-hq/settings_local.py:/usr/src/app/hq/hq/settings/settings_local.py
+
+
+
+
 Following the tutorial at
 https://docs.djangoproject.com/en/1.10/intro/tutorial01/
 
