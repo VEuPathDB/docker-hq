@@ -17,9 +17,9 @@ RUN mkdir -p /usr/src/app
 
 COPY hq /usr/src/app/hq
 
-RUN apk --no-cache add git gcc musl-dev && \
+RUN apk --no-cache add git gcc musl-dev linux-headers && \
   pip install --no-cache-dir -r /usr/src/app/hq/requirements.txt && \
-  apk del git gcc musl-dev
+  apk del git gcc musl-dev linux-headers
 
 COPY start_django.sh start_rqworker.sh start_rqscheduler.sh start_rqdashboard.sh /
 

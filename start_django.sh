@@ -21,10 +21,15 @@ python manage.py migrate
 
 
 if [ $DJANGO_SETTINGS_MODULE == "hq.settings.production" ]; then
-  echo "Starting Gunicorn for '$project'".
-  exec gunicorn "${project}.wsgi:application" \
-    --bind 0.0.0.0:8000 \
-    --workers 3
+  echo "Starting uwsgi for '$project'".
+  exec uwsgi --chdir="/usr/src/app/${project}" \
+    --module=${project}.wsgi:application \
+    --master --pidfile="/tmp/${project}-master.pid" \
+    --http=0.0.0.0:8000 \
+    --processes=5 \
+    --harakiri=20 \
+    --max-requests=5000 \
+    --vacuum
 else
   exec python manage.py runserver 0.0.0.0:8000
 fi

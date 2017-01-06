@@ -1,5 +1,6 @@
 Django==1.10.3
-gunicorn==19.6.0
+uwsgi==2.0.14
+
 django-import-export==0.5.1
 whitenoise==3.2.2
 django-auth-ldap==1.2.8
